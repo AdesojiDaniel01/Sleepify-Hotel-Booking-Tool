@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Reviews</title>
+</head>
+<body>
+
+    <h2>Hotel Reviews</h2>
+
+    <div>
+        {% for review in reviews %}
+            <h4>{{ review.name }} (Rating: {{ review.rating }}/5)</h4>
+            <p>{{ review.comment }}</p>
+        {% empty %}
+            <p>No reviews yet.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
