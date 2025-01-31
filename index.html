@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmark Hotel Feature with Persistence</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .hotel-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 20px;
+            width: 300px;
+            position: relative;
+        }
+
+        .hotel-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .bookmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: gray;
+        }
+
+        .bookmarked {
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hotel-card">
+        <div class="hotel-title">Hotel Paradise</div>
+        <p>Enjoy a luxury stay with a sea view.</p>
+        <span class="bookmark" id="bookmark1" data-hotel-id="1">&#9734;</span> <!-- Star icon -->
+    </div>
+
+    <div class="hotel-card">
+        <div class="hotel-title">City Lights Hotel</div>
+        <p>A modern hotel in the heart of the city.</p>
+        <span class="bookmark" id="bookmark2" data-hotel-id="2">&#9734;</span>
+    </div>
+
+    <script>
+        // Check localStorage for bookmarked hotels and update UI accordingly
+        document.addEventListener("DOMContentLoaded", function() {
+            const bookmarks = document.querySelectorAll('.bookmark');
+
+            bookmarks.forEach(bookmark => {
+                const hotelId = bookmark.getAttribute('data-hotel-id');
+                const isBookmarked = localStorage.getItem(`hotel-${hotelId}`);
+
+                if (isBookmarked === 'true') {
+                    bookmark.classList.add('bookmarked');
+                    bookmark.innerHTML = '&#9733;'; // Filled star
+                }
+                
+                bookmark.addEventListener('click', function() {
+                    toggleBookmark(bookmark, hotelId);
+                });
+            });
+        });
+
+        // Toggle bookmark status and update localStorage
+        function toggleBookmark(bookmark, hotelId) {
+            if (bookmark.classList.contains('bookmarked')) {
+                bookmark.classList.remove('bookmarked');
+                bookmark.innerHTML = '&#9734;'; // Unfilled star
+                localStorage.setItem(`hotel-${hotelId}`, 'false'); // Remove from bookmarks
+            } else {
+                bookmark.classList.add('bookmarked');
+                bookmark.innerHTML = '&#9733;'; // Filled star
+                localStorage.setItem(`hotel-${hotelId}`, 'true'); // Add to bookmarks
+            }
+        }
+    </script>
+
+</body>
+</html>

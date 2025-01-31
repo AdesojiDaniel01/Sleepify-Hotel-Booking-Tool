@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Review Feature with LocalStorage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .review-section {
+            width: 400px;
+            margin: 0 auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .review-form {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .review-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .review-form input, .review-form textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .review-form button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .review-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .reviews {
+            border: 1px solid #ddd;
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .review-item {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-item h4 {
+            margin: 0;
+        }
+
+        .review-item p {
+            margin: 5px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="review-section">
+        <h2>Hotel Reviews</h2>
+
+        <!-- Review Form -->
+        <div class="review-form">
+            <h3>Leave a Review</h3>
+            <form id="reviewForm">
+                <label for="name">Your Name:</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="rating">Rating (1-5):</label>
+                <input type="number" id="rating" name="rating" min="1" max="5" required>
+
+                <label for="comment">Your Review:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+
+                <button type="submit">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- Reviews Display Section -->
+        <div class="reviews" id="reviewsContainer">
+            <h3>Reviews:</h3>
+            <!-- Reviews will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Get the review form and reviews container
+        const reviewForm = document.getElementById('reviewForm');
+        const reviewsContainer = document.getElementById('reviewsContainer');
+
+        // Load reviews from localStorage when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReviewsFromLocalStorage();
+        });
+
+        // Function to load reviews from localStorage
+        function loadReviewsFromLocalStorage() {
+            const storedReviews = JSON.parse(localStorage.getItem('hotelReviews')) || [];
+            
+            storedReviews.forEach(review => {
+                displayReview(review.name, review.rating, review.comment);
+            });
+        }
+
+        // Listen for form submission
+        reviewForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            // Get form values
+            const name = document.getElementById('name').value;
+            const rating = document.getElementById('rating').value;
+            const comment = document.getElementById('comment').value;
+
+            // Create a review object
+            const review = {
+                name: name,
+                rating: rating,
+                comment: comment
+            };
+
+            // Save the review to localStorage
+            saveReviewToLocalStorage(review);
+
+            // Display the new review on the page
+            displayReview(name, rating, comment);
+
+            // Clear the form
+            reviewForm.reset();
+        });
+
+        // Function to save the review to localStorage
+        function saveReviewToLocalStorage(review) {
+            let reviews = JSON.parse(localStorage.getItem('hotelReviews')) || [];
+            reviews.push(review);
+            localStorage.setItem('hotelReviews', JSON.stringify(reviews));
+        }
+
+        // Function to display a review on the page
+        function displayReview(name, rating, comment) {
+            const reviewItem = document.createElement('div');
+            reviewItem.classList.add('review-item');
+            reviewItem.innerHTML = `
+                <h4>${name} (Rating: ${rating}/5)</h4>
+                <p>${comment}</p>
+            `;
+
+            // Append the new review to the reviews container
+            reviewsContainer.appendChild(reviewItem);
+        }
+    </script>
+
+</body>
+</html>
